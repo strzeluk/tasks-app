@@ -4,6 +4,8 @@ import TaskModal from "./UI/TaskModal";
 
 const EditTask = (props) => {
   const [disableButton, setDisableButton] = useState(false);
+  const [error, setError] = useState(null);
+
   const formRef = useRef();
 
   async function editTask(params) {
@@ -12,13 +14,20 @@ const EditTask = (props) => {
     const idValue = props.task.id;
     const titleValue = title.value;
     const contentValue = content.value;
-    await axios.post("/api/editTask", {
-      id: idValue,
-      title: titleValue,
-      content: contentValue,
-    });
-    setDisableButton(false);
-    window.location.reload(); //TODO: to jest do poprawy...
+    axios
+      .post("/api/editTask", {
+        id: idValue,
+        title: titleValue,
+        content: contentValue,
+      })
+      .then((response) => {
+        setDisableButton(false);
+        window.location.reload(); //TODO: to jest do poprawy...
+      })
+      .catch((error) => {
+        setError("Something went wrong");
+        console.log(error);
+      });
   }
 
   return (

@@ -4,6 +4,7 @@ import TaskModal from "./UI/TaskModal";
 
 const AddTask = (props) => {
   const [disableButton, setDisableButton] = useState(false);
+  const [error, setError] = useState(null);
 
   const formRef = useRef();
 
@@ -12,12 +13,19 @@ const AddTask = (props) => {
     const { title, content } = formRef.current;
     const titleValue = title.value.trim();
     const contentValue = content.value.trim();
-    await axios.post("/api/addTask", {
-      title: titleValue,
-      content: contentValue,
-    });
-    setDisableButton(false);
-    window.location.reload(); //TODO: to jest do poprawy...
+    axios
+      .post("/api/addTask", {
+        title: titleValue,
+        content: contentValue,
+      })
+      .then((response) => {
+        setDisableButton(false);
+        window.location.reload(); //TODO: to jest do poprawy...
+      })
+      .catch((error) => {
+        setError("Something went wrong");
+        console.log(error);
+      });
   }
 
   return (
@@ -26,6 +34,7 @@ const AddTask = (props) => {
       action={addNewTask}
       closeModal={props.closeModal}
       formRef={formRef}
+      error={error}
     ></TaskModal>
   );
 };

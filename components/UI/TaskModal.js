@@ -1,5 +1,5 @@
 import { Modal, Button } from "react-bootstrap";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const TaskModal = (props) => {
   const [formData, setFormData] = useState({ title: "", content: "" });
@@ -10,6 +10,12 @@ const TaskModal = (props) => {
       setFormData(props.task);
     }
   }, []);
+
+  useEffect(() => {
+    if (props.error) {
+      setError(props.error);
+    }
+  }, [props.error]);
 
   const submitHandler = () => {
     if (!formData.title || !formData.content) {

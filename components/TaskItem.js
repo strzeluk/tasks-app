@@ -2,9 +2,11 @@ import { Button } from "react-bootstrap";
 import { useState } from "react";
 import axios from "axios";
 import EditTask from "./EditTask";
+import ConfirmationModal from "./UI/confirmationModal";
 
 const TaskItem = (props) => {
   const [showEditTaskModal, setShowEditTaskModal] = useState(false);
+  const [showDeleteTaskModal, setShowDeleteTaskModal] = useState(false);
   const { task } = props;
 
   const deleteHandler = async () => {
@@ -12,7 +14,11 @@ const TaskItem = (props) => {
     window.location.reload();
   };
 
-  const editHandler = async () => {
+  const deleteClickHandler = () => {
+    setShowDeleteTaskModal((prevState) => !prevState);
+  };
+
+  const editClickHandler = async () => {
     setShowEditTaskModal((prevState) => !prevState);
   };
 
@@ -34,13 +40,13 @@ const TaskItem = (props) => {
           <div className="d-flex align-items-center">
             <Button
               className="btn btn-sm btn-danger ms-2"
-              onClick={deleteHandler}
+              onClick={deleteClickHandler}
             >
               <i className="fa-solid fa-trash " style={{ cursor: "pointer" }} />
             </Button>
             <Button
               className="btn btn-sm btn-warning ms-2"
-              onClick={editHandler}
+              onClick={editClickHandler}
             >
               <i
                 className="fa-solid fa-pen-to-square"
@@ -52,6 +58,12 @@ const TaskItem = (props) => {
       </li>
       {showEditTaskModal ? (
         <EditTask closeModal={() => setShowEditTaskModal(false)} task={task} />
+      ) : null}
+      {showDeleteTaskModal ? (
+        <ConfirmationModal
+          closeModal={() => setShowDeleteTaskModal(false)}
+          action={deleteHandler}
+        />
       ) : null}
     </>
   );
