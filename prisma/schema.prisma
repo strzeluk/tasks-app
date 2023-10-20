@@ -11,6 +11,6 @@ model Task {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(255)
   createdAt DateTime @default(now()) @db.Timestamp(0)
-  modiiedAt DateTime @default(now()) @db.Timestamp(0)
+  modifiedAt DateTime @default(now()) @db.Timestamp(0)
   content   String?  @db.Text
 }
