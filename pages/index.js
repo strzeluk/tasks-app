@@ -1,41 +1,11 @@
 import Head from "next/head";
+
 import { Container } from "react-bootstrap";
 import TaskList from "@/components/TaskList";
 import Header from "@/components/UI/Header";
+import { prisma } from "../server/db/client";
 
-export default function Home() {
-  const DUMMY_TAKS = [
-    {
-      id: 1,
-      title: "Fist task",
-      content:
-        "Consequat nisi est enim quis nostrud labore ea excepteur sunt fugiat. Laboris cillum magna elit labore pariatur duis veniam quis. Ipsum ipsum aute cillum ut do velit velit laborum. Mollit adipisicing occaecat fugiat aliquip eu minim dolore voluptate. Nulla elit qui est aute excepteur anim esse. Exercitation et voluptate proident laboris pariatur ad sit aliqua id.",
-      createdAt: "",
-      modifiedAt: "",
-    },
-    {
-      id: 2,
-      title: "Second task",
-      content: "Some text",
-      createdAt: "",
-      modifiedAt: "",
-    },
-    {
-      id: 3,
-      title: "Third task",
-      content: "Some text",
-      createdAt: "",
-      modifiedAt: "",
-    },
-    {
-      id: 4,
-      title: "Fourth task",
-      content: "Some text",
-      createdAt: "",
-      modifiedAt: "",
-    },
-  ];
-
+export default function Home({ tasks }) {
   return (
     <>
       <Head>
@@ -50,8 +20,21 @@ export default function Home() {
       </Head>
       <Header />
       <Container>
-        <TaskList />
+        <TaskList tasks={tasks} />
       </Container>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const tasks = await prisma.tasks.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return {
+    props: {
+      tasks: JSON.parse(JSON.stringify(tasks)),
+    },
+  };
 }

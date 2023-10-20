@@ -1,0 +1,20 @@
+import { prisma } from "../../server/db/client";
+
+export default async function handler(req, res) {
+  const data = req.body;
+
+  try {
+    const result = await prisma.tasks.update({
+      where: {
+        id: data.id,
+      },
+      data: {
+        ...data,
+      },
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(403).json({ message: "Something went wrong" });
+  }
+}

@@ -1,25 +1,59 @@
-import { Button, ButtonGroup, Col, Container, Row } from "react-bootstrap";
+import { Button } from "react-bootstrap";
+import { useState } from "react";
+import axios from "axios";
+import EditTask from "./EditTask";
 
 const TaskItem = (props) => {
+  const [showEditTaskModal, setShowEditTaskModal] = useState(false);
+  const { task } = props;
+
+  const deleteHandler = async () => {
+    await axios.post("/api/deleteTask", { id: parseInt(task.id) });
+    window.location.reload();
+  };
+
+  const editHandler = async () => {
+    setShowEditTaskModal((prevState) => !prevState);
+  };
+
   return (
-    <li className="list-group-item">
-      <div className="d-flex justify-content-between">
-        <div className="me-3">
-          <div>{props.title}</div>
-          <div className="fw-lighter">{props.content}</div>
+    <>
+      <li className="list-group-item">
+        <div className="d-flex justify-content-between">
+          <div className="me-3">
+            <div className="d-flex align-items-center">
+              <h4>{task.title}</h4>
+              <span className="small ms-3">
+                Created: {task.createdAt.slice(0, 10)}
+              </span>
+            </div>
+
+            <div></div>
+            <div className="fw-lighter">{task.content}</div>
+          </div>
+          <div className="d-flex align-items-center">
+            <Button
+              className="btn btn-sm btn-danger ms-2"
+              onClick={deleteHandler}
+            >
+              <i className="fa-solid fa-trash " style={{ cursor: "pointer" }} />
+            </Button>
+            <Button
+              className="btn btn-sm btn-warning ms-2"
+              onClick={editHandler}
+            >
+              <i
+                className="fa-solid fa-pen-to-square"
+                style={{ cursor: "pointer" }}
+              />
+            </Button>
+          </div>
         </div>
-        <div className="d-flex align-items-center">
-          <i
-            class="fa-solid fa-trash m-1"
-            style={{ color: "red", cursor: "pointer" }}
-          ></i>
-          <i
-            class="fa-solid fa-pen-to-square m-1"
-            style={{ color: "grey", cursor: "pointer" }}
-          ></i>
-        </div>
-      </div>
-    </li>
+      </li>
+      {showEditTaskModal ? (
+        <EditTask closeModal={() => setShowEditTaskModal(false)} task={task} />
+      ) : null}
+    </>
   );
 };
 

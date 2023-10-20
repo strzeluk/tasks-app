@@ -7,10 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Task {
+model Tasks {
   id        Int      @id @default(autoincrement())
   title     String   @db.VarChar(255)
+  content   String   @db.Text
   createdAt DateTime @default(now()) @db.Timestamp(0)
-  modifiedAt DateTime @default(now()) @db.Timestamp(0)
-  content   String?  @db.Text
 }
